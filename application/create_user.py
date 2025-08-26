@@ -12,9 +12,15 @@ def create_user(email : str, password : str, repo : UserRepositorySQLite) -> Use
 def validate_email_address(email : str) -> str:
     try:
         email_info = validate_email(email)
-        return email_info.email
-    except EmailNotValidError as e:
-        raise ValueError(str(e))
+        return email_info.normalized
+    except EmailNotValidError:
+        raise ValueError("email is not valid")
 
 def hash_password(password : str) -> str:
-    pass
+    if password is not None:
+        if not password.isspace() and password:
+            pass
+        else:
+            raise ValueError("Password can not be blank.")
+    else:
+        raise ValueError("Password can not be None.")
