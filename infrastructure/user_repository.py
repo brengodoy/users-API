@@ -4,10 +4,11 @@ from domain.user import User
 class UserRepositorySQLite():
     def __init__(self, db_path = "users.db"):
         self.db_path = db_path
+        self.conn = sqlite3.connect(self.db_path)
         self.create_table()
     
     def create_table(self):
-        with sqlite3.connect(self.db_path) as conn:
+        with self.conn as conn:
             cursor = conn.cursor()
             sql = """CREATE TABLE IF NOT EXISTS users (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +18,7 @@ class UserRepositorySQLite():
             conn.commit()
     
     def save(self, user):
-        with sqlite3.connect(self.db_path) as conn:
+        with self.conn as conn:
             cursor = conn.cursor()
             sql = """INSERT INTO users (email,password) VALUES (?,?)"""
             cursor.execute(sql, (user.email, user.password_hash))
@@ -25,7 +26,7 @@ class UserRepositorySQLite():
             user.id = cursor.lastrowid
     
     def find_by_email(self,email):
-        with sqlite3.connect(self.db_path) as conn:
+        with self.conn as conn:
             cursor = conn.cursor()
             sql = """SELECT * FROM users WHERE email = ?"""
             cursor.execute(sql,(email,))

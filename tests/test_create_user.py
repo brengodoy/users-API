@@ -5,7 +5,7 @@ from infrastructure.user_repository import UserRepositorySQLite
 
 @pytest.fixture
 def repo():
-    return UserRepositorySQLite()
+    return UserRepositorySQLite(":memory:")
 
 class TestCreateUser():
     def test_success(self, repo):
@@ -50,4 +50,11 @@ class TestCreateUser():
         with pytest.raises(sqlite3.IntegrityError) as e:
             create_user(email, password, repo)
         assert "UNIQUE constraint failed: users.email" in str(e.value)
+        
+    def test_no_repository(self):
+        email = "example1@gmail.com"
+        password = "password"
+        with pytest.raises(ValueError) as e:
+            create_user(email, password, None)
+        assert "The repository cannot be None." in str(e.value)
         

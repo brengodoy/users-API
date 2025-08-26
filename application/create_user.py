@@ -6,7 +6,10 @@ def create_user(email : str, password : str, repo : UserRepositorySQLite) -> Use
     valid_email = validate_email_address(email)
     password_hash = hash_password(password)
     user = User(valid_email, password_hash)
-    repo.save(user)
+    if repo:
+        repo.save(user)
+    else:
+        raise ValueError("The repository cannot be None.")
     return user
 
 def validate_email_address(email : str) -> str:
