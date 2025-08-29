@@ -2,6 +2,7 @@ import pytest
 import sqlite3
 from application.create_user import create_user
 from infrastructure.user_repository import UserRepositorySQLite
+import bcrypt
 
 @pytest.fixture
 def repo():
@@ -13,7 +14,10 @@ class TestCreateUser():
         password = "password"
         user = create_user(email, password, repo)
         assert user.email == email
-        #assert user.password_hash == "password"
+        assert bcrypt.checkpw(
+            password.encode("utf-8"), 
+            user.password_hash.encode("utf-8")
+        )
         
     def test_invalid_email(self, repo):
         email = "noemail.comnoemail@noemail"
