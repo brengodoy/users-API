@@ -13,3 +13,9 @@ class EnteredEmailNotValidError(CustomError):
     
 class NoRespositoryError(CustomError):
     status_code = 500
+    
+class UserNotFoundError(CustomError):
+    status_code = 404
+    
+class InvalidCredentialsError(CustomError):
+    status_code = 422
